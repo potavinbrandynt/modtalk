@@ -1,0 +1,21 @@
+<html>
+    <body>
+        
+        <header>
+            <h1>ModTalk</h1>
+        </header>
+        
+        <nav>
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <a href="{% url 'contact' %}">Contact</a>
+                </li>
+            </ul>
+        </nav>
+        {% block content%}
+        {% endblock %}
+    </body>
+</html>
