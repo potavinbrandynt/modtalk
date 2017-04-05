@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Site ID
+SITE_ID = 1
 
 # Application definition
 
@@ -38,11 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+    'registration',
     'links',
     'contact',
     'modtalk',
-    
 ]
+
+from django.core.urlresolvers import reverse_lazy
+
+LOGIN_URL=reverse_lazy("login")
+LOGIN_REDIRECT_URL=reverse_lazy("home")
+LOGOUT_URL=reverse_lazy("logout")
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
