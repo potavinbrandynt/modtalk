@@ -1,32 +1,21 @@
-"""modtalk URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Add an import:  from blog import urls as blog_urls
-    2. Import the include() function: from django.conf.urls import url, include
-    3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
-"""
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 
 from django.contrib import admin
 admin.autodiscover()
 
-from links.views import LinkListView, UserProfileDetailView, UserProfileEditView
+#from django.contrib import comments as django_comments.urls
+
+from links.views import (LinkListView, UserProfileDetailView,
+UserProfileEditView, LinkCreateView, LinkDetailView, LinkUpdateView, LinkDeleteView)
+
 from contact import urls as contact_urls
 from .views import redirect_root
 
 urlpatterns = [
     url(r'^$', redirect_root),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^comments/', include('django_comments.urls')),
     url(r'^home/$', LinkListView.as_view(), name='home'),
     url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^contact/', include(contact_urls)),
@@ -39,4 +28,12 @@ urlpatterns = [
         name="profile"),
     url(r"edit_profile/$", auth(UserProfileEditView.as_view()),
         name="edit_profile"),
+    url(r"^link/create/$", auth(LinkCreateView.as_view()),
+        name="link_create"),
+    url(r"^link/(?P<pk>\d+)$", LinkDetailView.as_view(),
+        name="link_detail"),
+    url(r"^link/update/(?P<pk>\d+)$", auth(LinkUpdateView.as_view()),
+        name="link_update"),
+    url(r"^link/delete/(?P<pk>\d+)$", auth(LinkDeleteView.as_view()),
+        name="link_delete"),
 ]

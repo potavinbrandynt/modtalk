@@ -41,10 +41,6 @@ a {
     text-decoration: none;
 }
 
-h2 a {
-    color: #FF0031;
-}
-
 button, input[type="button"], input[type="reset"], input[type="submit"]
 {
     cursor: pointer;
