@@ -7,7 +7,8 @@ admin.autodiscover()
 #from django.contrib import comments as django_comments.urls
 
 from links.views import (LinkListView, UserProfileDetailView,
-UserProfileEditView, LinkCreateView, LinkDetailView, LinkUpdateView, LinkDeleteView)
+UserProfileEditView, LinkCreateView, LinkDetailView, LinkUpdateView,
+LinkDeleteView, VoteFormView)
 
 from contact import urls as contact_urls
 from .views import redirect_root
@@ -36,4 +37,5 @@ urlpatterns = [
         name="link_update"),
     url(r"^link/delete/(?P<pk>\d+)$", auth(LinkDeleteView.as_view()),
         name="link_delete"),
+    url(r'^vote/$', auth(VoteFormView.as_view()), name="vote"),
 ]

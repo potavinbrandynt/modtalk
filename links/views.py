@@ -1,12 +1,10 @@
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .forms import UserProfileForm
-from .models import Link, UserProfile
-from .forms import LinkForm
+from .forms import LinkForm, UserProfileForm, VoteForm
+from .models import Link, UserProfile, Vote
 
 from django.contrib.auth import get_user_model
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import UpdateView
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.core.urlresolvers import reverse, reverse_lazy
 
 class LinkListView(ListView):
@@ -49,10 +47,35 @@ class UserProfileDetailView(DetailView):
 class UserProfileEditView(UpdateView):
     model = UserProfile
     form_class = UserProfileForm
-    tempalte_name = "edit_profile.html"
+    template_name = "edit_profile.html"
     
     def get_object(self, queryset=None):
         return UserProfile.objects.get_or_create(user=self.request.user)[0]
         
     def get_success_url(self):
         return reverse("profile", kwargs={"slug": self.request.user})
+
+class VoteFormView(FormView):
+    model = Vote
+    form_class = VoteForm
+    template_name = "link_list.html"
+    
+    def form_valid(self, form):
+        link = get_object_or_404(Link, pk=form.data["link"])
+        user = self.request.user
+        prev_votes = Vote.objects.filter(voter=user, link=link )
+        has_voted = (prev_votes.count() > 0)
+        
+        if not has_voted:
+            #add vote
+            Vote.objects.create(voter=user, link=link)
+            print("voted")
+        else:
+            # delete vote
+            prev_votes[0].delete()
+            print("unvoted")
+        return redirect("home")
+            
+    def form_invalid(self, form):
+        print("invalid")
+        return redirect("home")
